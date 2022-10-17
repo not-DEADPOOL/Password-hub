@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,13 +12,25 @@ namespace Password_storer
     {
         static void Main(string[] args)
         {
+            File.Copy("password.txt", "tmp.txt");
+            string[] linee = File.ReadAllLines("password.txt");
             StreamWriter sw = new StreamWriter("password.txt");
-            StreamReader sr = new StreamReader("password.txt");
             char continua;
+            
+            int i = 0;
             do
             {
-
+                bool vuota=false;
                 char risposta;
+                for (int j = 0; j < linee.Length - 1; j++)
+                {
+                    vuota = linee[i] == null ? true : false;
+                }
+                if (vuota)
+                {
+                    Console.Write("Inserisci la password da aggiungere:");
+                    sw.WriteLine(Console.ReadLine());
+                }
                 do {
 
                     Console.WriteLine("Cosa vuoi fare? [l,a,r]");
@@ -27,7 +39,6 @@ namespace Password_storer
                     Console.Clear();
                 } while (risposta != 'l' && risposta != 'a' && risposta != 'r');
 
-                string linea = sr.ReadLine();
                 string rimozione = null;
                 
                 if (risposta == 'a')
@@ -41,23 +52,28 @@ namespace Password_storer
                     rimozione = Console.ReadLine();
 
                 }
-                    while (linea != null)
+
+                while (linee[i] != null)
                     {
                         if (risposta == 'l')
                         {
-                            Console.WriteLine($"{linea}");
+                            Console.WriteLine($"{linee[i]}");
                         }
-                       if (risposta == 'r')
+
+                        if (risposta=='r' && linee[i]==rimozione)
                         {
-                            Console.Write("Inserisci la password da rimuovere:");
-                            rimozione = Console.ReadLine();
-                        
+                              continue;
                         }
-                        linea = sr.ReadLine();
+                        else if(risposta == 'r')
+                        {
+                               sw.WriteLine(linee[i]);
+                        }
+                        i++;
                     }
                 
                     Console.WriteLine("Vuoi continuare?");
                     continua = Convert.ToChar(Console.ReadLine());
+                
                 } while (continua == 's') ;
             
 
